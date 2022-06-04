@@ -18,9 +18,8 @@ async fn main() -> web3::Result {
     let rpc = dotenv::var(rpc_key).unwrap();
 
     let prediction_handler_address = web3::types::Address::from_str("0x122dF77D0069667EFA788aD78650630cb7e8170d").unwrap();
+    let inflation_oracle_address = web3::types::Address::from_str("0xCa4B1B05AA433Fc397959cEDdb897DBAFe9C8E87").unwrap();
 
-    let inflation_oracle = "INFLATION_ORACLE_ADDR";
-    let inflation_oracle_address = dotenv::var(inflation_oracle).unwrap();
 
     //Web3 inits
     let transport = web3::transports::Http::new(&rpc)?;
@@ -29,15 +28,12 @@ async fn main() -> web3::Result {
     let latest = Some(web3::types::BlockNumber::Latest);
     let nonce = web3.eth().transaction_count(address, latest).await?;
 
-    let prediction_handler_bytecode = include_str!("./contracts/PredictionHandler.bin");
+    //Contract inits
     let prediction_handler_contract = web3::contract::Contract::from_json(web3.eth(),prediction_handler_address,include_bytes!("./contracts/PredictionHandler.abi"));
-
-    println!("{:?}",prediction_handler_address);
-    println!("{:?}",prediction_handler_contract);
-
-
-
-
+    let inflation_oracle_contract =  web3::contract::Contract::from_json(web3.eth(),inflation_oracle_address,include_bytes!("./contracts/InflationFeed.abi"));
+    
+    //Event filters
+    println!("{}",inflation_oracle_contract.address());
 
     Ok(())
 
