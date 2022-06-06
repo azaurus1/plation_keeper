@@ -905,6 +905,7 @@ name = "plation_keeper"
 version = "0.1.0"
 dependencies = [
  "dotenv",
+ "futures",
  "hex-literal",
  "tokio",
  "web3",
